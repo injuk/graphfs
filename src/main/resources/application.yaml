@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: hraphfs
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: graphinjuk
