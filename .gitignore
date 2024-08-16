@@ -5,6 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### Neo4J ###
+neo4j/
+
 ### STS ###
 .apt_generated
 .classpath
