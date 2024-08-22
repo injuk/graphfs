@@ -1,8 +1,15 @@
+server:
+  port: 33780
+
 spring:
   application:
-    name: hraphfs
+    name: graphfs
   neo4j:
     uri: bolt://localhost:7687
     authentication:
       username: neo4j
       password: graphinjuk
+
+logging:
+  level:
+    org.springframework.data.neo4j: DEBUG
