@@ -9,7 +9,7 @@ import org.springframework.data.neo4j.core.transaction.ReactiveNeo4jTransactionM
 import org.neo4j.cypherdsl.core.renderer.Configuration as Neo4JConfiguration
 
 @Configuration
-class GraphfsConfiguration {
+class Beans {
 
     @Bean
     fun cypherDslConfiguration(): Neo4JConfiguration = Neo4JConfiguration.newConfig().run {
@@ -18,7 +18,10 @@ class GraphfsConfiguration {
     }
 
     @Bean
-    fun reactiveTransactionManager(driver: Driver, databaseNameProvider: ReactiveDatabaseSelectionProvider): ReactiveNeo4jTransactionManager {
+    fun reactiveTransactionManager(
+        driver: Driver,
+        databaseNameProvider: ReactiveDatabaseSelectionProvider,
+    ): ReactiveNeo4jTransactionManager {
         return ReactiveNeo4jTransactionManager(driver, databaseNameProvider)
     }
 }
