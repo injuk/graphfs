@@ -12,10 +12,7 @@ class User(
     companion object {
         fun create(): User = User(
             id = "System",
-            project = Project(
-                id = "project",
-                name = "Project for test",
-            ),
+            project = Project("project"),
         )
     }
 
