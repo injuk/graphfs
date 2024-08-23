@@ -1,12 +1,15 @@
 package ga.injuk.graphfs.domain.useCase
 
+import ga.injuk.graphfs.domain.Parent
+
 interface CreateFolder : UseCase<CreateFolder.Request, CreateFolder.Response> {
     override val name: String
         get() = CreateFolder::class.java.name
 
     data class Request(
+        val domain: String,
         val name: String,
-        val depth: Int,
+        val parent: Parent,
     )
 
     data class Response(
