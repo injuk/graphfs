@@ -3,10 +3,10 @@ POST http://localhost:33780/api/v1/folders HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "child-1",
+  "name": "child-2-1",
   "domain": "VIDEO",
   "parent": {
-    "id": "79fd7ca8-253c-4551-93c5-8b85df49a4d7"
+    "id": "a358c1d5-e9d3-4f66-8cc3-970d6aeb9c24"
   }
 }
 
