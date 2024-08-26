@@ -7,9 +7,9 @@ interface CreateFolder : UseCase<CreateFolder.Request, CreateFolder.Response> {
         get() = CreateFolder::class.java.name
 
     data class Request(
-        val domain: String,
+        val driveId: String,
         val name: String,
-        val parent: Parent,
+        val parent: Parent?,
     )
 
     data class Response(
