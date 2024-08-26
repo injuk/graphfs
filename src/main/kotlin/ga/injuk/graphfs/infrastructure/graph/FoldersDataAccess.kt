@@ -6,6 +6,6 @@ import org.springframework.data.neo4j.repository.query.Query
 import reactor.core.publisher.Mono
 
 interface FoldersDataAccess : ReactiveNeo4jRepository<Folder, String> {
-    @Query("MATCH (root: Folder)-[:DIRECT_CHILDREN*]->(f: Folder) WHERE root.id = \$rootId AND f.id = \$id RETURN f LIMIT 1")
-    fun findOneById(rootId: String, id: String): Mono<Folder?>
+    @Query("MATCH (drive: Drive)-[:DIRECT_CHILD*]->(folder: Folder) WHERE drive.id = \$driveId AND folder.id = \$id RETURN folder LIMIT 1")
+    fun findByDriveAndId(driveId: String, id: String): Mono<Folder?>
 }
