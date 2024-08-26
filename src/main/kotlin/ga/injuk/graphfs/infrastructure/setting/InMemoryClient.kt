@@ -1,54 +1,36 @@
 package ga.injuk.graphfs.infrastructure.setting
 
 import ga.injuk.graphfs.application.gateway.client.SettingClient
-import ga.injuk.graphfs.domain.Constants
-import ga.injuk.graphfs.domain.Folder
+import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Project
-import ga.injuk.graphfs.domain.RootFolder
+import ga.injuk.graphfs.infrastructure.graph.DrivesDataAccess
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.time.OffsetDateTime
 
 @Component
-class InMemoryClient : SettingClient {
+class InMemoryClient(
+    private val drivesDataAccess: DrivesDataAccess,
+) : SettingClient {
     companion object {
-        private val settings: MutableMap<CacheKey, RootFolder> = mutableMapOf()
+        private val settings: MutableMap<Project, Drive> = mutableMapOf()
         private val logger = LoggerFactory.getLogger(InMemoryClient::class.java)
     }
 
-    override suspend fun getRootFolder(domain: String, project: Project): RootFolder? {
-        val cacheKey = CacheKey(domain, project)
-
-        return settings[cacheKey].let { cachedFolder ->
-            if (cachedFolder == null) {
-                val rootFolder = getFromSomewhere(domain, project)
-                settings[cacheKey] = rootFolder
-
-                rootFolder
-            } else {
-                cachedFolder
-            }
+    override suspend fun getDriveInfo(project: Project, driveId: String): Drive {
+        if (settings.notContainsKey(project)) {
+            settings[project] = fetchDrive(project, driveId)
         }
+
+        return settings[project]!!
     }
 
-    private fun getFromSomewhere(domain: String, project: Project): RootFolder {
+    private fun MutableMap<Project, Drive>.notContainsKey(key: Project): Boolean = !containsKey(key)
+
+    private suspend fun fetchDrive(project: Project, driveId: String): Drive {
         logger.info("there is no cached root folder... get new one from somewhere")
 
-        return RootFolder(
-            info = Folder(
-                id = Constants.ROOT_FOLDER_ID,
-                name = Constants.ROOT_FOLDER_NAME,
-                depth = 0,
-                creator = Constants.SYSTEM,
-                createdAt = OffsetDateTime.now(),
-            ),
-            project = project.copy(),
-            domain = domain,
-        )
+        return drivesDataAccess.findByProjectIdAndId(project.id, driveId).awaitSingleOrNull()
+            ?: throw RuntimeException("there is no drive($driveId) in project")
     }
-
-    private data class CacheKey(
-        val domain: String,
-        val project: Project,
-    )
 }
