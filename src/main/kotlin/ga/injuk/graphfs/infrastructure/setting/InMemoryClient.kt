@@ -28,7 +28,7 @@ class InMemoryClient(
     private fun MutableMap<Project, Drive>.notContainsKey(key: Project): Boolean = !containsKey(key)
 
     private suspend fun fetchDrive(project: Project, driveId: String): Drive {
-        logger.info("there is no cached root folder... get new one from somewhere")
+        logger.info("there is no cached drive... try to fetch from neo4j")
 
         return drivesDataAccess.findByProjectIdAndId(project.id, driveId).awaitSingleOrNull()
             ?: throw RuntimeException("there is no drive($driveId) in project")
