@@ -2,12 +2,15 @@ package ga.injuk.graphfs.infrastructure.web.v1
 
 import ga.injuk.graphfs.application.controller.DriveController
 import ga.injuk.graphfs.application.controller.FolderController
+import ga.injuk.graphfs.application.controller.dto.request.CreateDriveRequest
+import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
+import ga.injuk.graphfs.application.controller.dto.response.ListResponse
+import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.CreateDrive
 import ga.injuk.graphfs.domain.useCase.CreateFolder
-import ga.injuk.graphfs.infrastructure.web.dto.request.CreateDriveRequest
-import ga.injuk.graphfs.infrastructure.web.dto.request.CreateFolderRequest
+import ga.injuk.graphfs.domain.useCase.ListDrives
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -19,6 +22,7 @@ import java.net.URI
 @RequestMapping("/api/v1/drives")
 class GraphfsApi(
     private val createDriveUseCase: CreateDrive,
+    private val listDrivesUseCase: ListDrives,
     private val createFolderUseCase: CreateFolder,
 ) : DriveController, FolderController {
     companion object {
@@ -46,6 +50,24 @@ class GraphfsApi(
             URI.create("$LOCATION_PREFIX/$driveId")
         )
             .build()
+    }
+
+    @GetMapping(
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun list(domain: String?): ResponseEntity<ListResponse<Drive>> {
+        val drives = createSystemUser().invoke(listDrivesUseCase)
+            .with(
+                ListDrives.Request(
+                    domain = domain,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.ok(
+            ListResponse(drives)
+        )
     }
 
     @PostMapping(

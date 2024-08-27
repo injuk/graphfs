@@ -1,6 +1,6 @@
 package ga.injuk.graphfs.application.controller
 
-import ga.injuk.graphfs.infrastructure.web.dto.request.CreateFolderRequest
+import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
 import org.springframework.http.ResponseEntity
 
 interface FolderController {
