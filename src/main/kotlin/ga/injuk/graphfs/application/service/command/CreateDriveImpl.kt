@@ -6,11 +6,13 @@ import ga.injuk.graphfs.domain.useCase.CreateDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CreateDriveImpl(
     private val driveDataAccess: DriveDataAccess,
 ) : CreateDrive {
+    @Transactional
     override suspend fun execute(user: User, request: CreateDrive.Request): CreateDrive.Response {
         val (id) = Drive.from(
             Drive.Request(

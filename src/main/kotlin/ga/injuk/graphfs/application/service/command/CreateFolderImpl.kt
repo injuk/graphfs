@@ -8,6 +8,7 @@ import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CreateFolderImpl(
@@ -15,6 +16,7 @@ class CreateFolderImpl(
     private val folderDataAccess: FolderDataAccess,
     private val settingClient: SettingClient,
 ) : CreateFolder {
+    @Transactional
     override suspend fun execute(user: User, request: CreateFolder.Request): CreateFolder.Response {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
