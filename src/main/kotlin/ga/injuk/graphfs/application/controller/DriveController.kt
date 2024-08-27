@@ -8,4 +8,5 @@ import org.springframework.http.ResponseEntity
 interface DriveController {
     suspend fun create(request: CreateDriveRequest): ResponseEntity<Unit>
     suspend fun list(domain: String?): ResponseEntity<ListResponse<Drive>>
+    suspend fun get(id: String): ResponseEntity<Drive>
 }

@@ -10,6 +10,7 @@ import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.CreateDrive
 import ga.injuk.graphfs.domain.useCase.CreateFolder
+import ga.injuk.graphfs.domain.useCase.GetDrive
 import ga.injuk.graphfs.domain.useCase.ListDrives
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -23,6 +24,7 @@ import java.net.URI
 class GraphfsApi(
     private val createDriveUseCase: CreateDrive,
     private val listDrivesUseCase: ListDrives,
+    private val getDriveUseCase: GetDrive,
     private val createFolderUseCase: CreateFolder,
 ) : DriveController, FolderController {
     companion object {
@@ -56,7 +58,9 @@ class GraphfsApi(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE],
     )
-    override suspend fun list(domain: String?): ResponseEntity<ListResponse<Drive>> {
+    override suspend fun list(
+        @RequestParam domain: String?,
+    ): ResponseEntity<ListResponse<Drive>> {
         val drives = createSystemUser().invoke(listDrivesUseCase)
             .with(
                 ListDrives.Request(
@@ -66,7 +70,28 @@ class GraphfsApi(
             .execute()
 
         return ResponseEntity.ok(
-            ListResponse(drives)
+            ListResponse(drives),
+        )
+    }
+
+    @GetMapping(
+        value = ["/{id}"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun get(
+        @PathVariable id: String,
+    ): ResponseEntity<Drive> {
+        val drive = createSystemUser().invoke(getDriveUseCase)
+            .with(
+                GetDrive.Request(
+                    id = id,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.ok(
+            drive,
         )
     }
 
