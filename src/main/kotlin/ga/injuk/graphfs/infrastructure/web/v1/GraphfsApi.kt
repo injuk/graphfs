@@ -4,14 +4,12 @@ import ga.injuk.graphfs.application.controller.DriveController
 import ga.injuk.graphfs.application.controller.FolderController
 import ga.injuk.graphfs.application.controller.dto.request.CreateDriveRequest
 import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
+import ga.injuk.graphfs.application.controller.dto.request.UpdateDriveRequest
 import ga.injuk.graphfs.application.controller.dto.response.ListResponse
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.CreateDrive
-import ga.injuk.graphfs.domain.useCase.CreateFolder
-import ga.injuk.graphfs.domain.useCase.GetDrive
-import ga.injuk.graphfs.domain.useCase.ListDrives
+import ga.injuk.graphfs.domain.useCase.*
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -25,6 +23,7 @@ class GraphfsApi(
     private val createDriveUseCase: CreateDrive,
     private val listDrivesUseCase: ListDrives,
     private val getDriveUseCase: GetDrive,
+    private val updateDriveUseCase: UpdateDrive,
     private val createFolderUseCase: CreateFolder,
 ) : DriveController, FolderController {
     companion object {
@@ -34,7 +33,6 @@ class GraphfsApi(
 
     @PostMapping(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     override suspend fun create(
         @RequestBody request: CreateDriveRequest,
@@ -55,7 +53,6 @@ class GraphfsApi(
     }
 
     @GetMapping(
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     override suspend fun list(
@@ -76,7 +73,6 @@ class GraphfsApi(
 
     @GetMapping(
         value = ["/{id}"],
-        consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     override suspend fun get(
@@ -95,10 +91,30 @@ class GraphfsApi(
         )
     }
 
+    @PatchMapping(
+        value = ["/{id}"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun update(
+        @PathVariable id: String,
+        @RequestBody request: UpdateDriveRequest,
+    ): ResponseEntity<Unit> {
+        createSystemUser().invoke(updateDriveUseCase)
+            .with(
+                UpdateDrive.Request(
+                    id = id,
+                    name = request.name,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.noContent()
+            .build()
+    }
+
     @PostMapping(
         value = ["/{driveId}/folders"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
     )
     override suspend fun create(
         @PathVariable("driveId") driveId: String,
