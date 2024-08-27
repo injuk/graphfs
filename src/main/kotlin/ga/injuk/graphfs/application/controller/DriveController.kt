@@ -11,4 +11,5 @@ interface DriveController {
     suspend fun list(domain: String?): ResponseEntity<ListResponse<Drive>>
     suspend fun get(id: String): ResponseEntity<Drive>
     suspend fun update(id: String, request: UpdateDriveRequest): ResponseEntity<Unit>
+    suspend fun delete(id: String): ResponseEntity<Unit>
 }

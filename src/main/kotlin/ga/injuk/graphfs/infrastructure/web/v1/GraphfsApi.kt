@@ -24,6 +24,7 @@ class GraphfsApi(
     private val listDrivesUseCase: ListDrives,
     private val getDriveUseCase: GetDrive,
     private val updateDriveUseCase: UpdateDrive,
+    private val deleteDriveUseCase: DeleteDrive,
     private val createFolderUseCase: CreateFolder,
 ) : DriveController, FolderController {
     companion object {
@@ -104,6 +105,24 @@ class GraphfsApi(
                 UpdateDrive.Request(
                     id = id,
                     name = request.name,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.noContent()
+            .build()
+    }
+
+    @DeleteMapping(
+        value = ["/{id}"],
+    )
+    override suspend fun delete(
+        @PathVariable id: String,
+    ): ResponseEntity<Unit> {
+        createSystemUser().invoke(deleteDriveUseCase)
+            .with(
+                DeleteDrive.Request(
+                    id = id,
                 )
             )
             .execute()
