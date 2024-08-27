@@ -1,10 +1,13 @@
 package ga.injuk.graphfs.infrastructure.web.v1
 
-import ga.injuk.graphfs.application.controller.Controller
-import ga.injuk.graphfs.application.controller.dto.CreateFolderRequest
+import ga.injuk.graphfs.application.controller.DriveController
+import ga.injuk.graphfs.application.controller.FolderController
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
+import ga.injuk.graphfs.domain.useCase.CreateDrive
 import ga.injuk.graphfs.domain.useCase.CreateFolder
+import ga.injuk.graphfs.infrastructure.web.dto.request.CreateDriveRequest
+import ga.injuk.graphfs.infrastructure.web.dto.request.CreateFolderRequest
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
@@ -15,11 +18,34 @@ import java.net.URI
 @RestController
 @RequestMapping("/api/v1/drives")
 class GraphfsApi(
+    private val createDriveUseCase: CreateDrive,
     private val createFolderUseCase: CreateFolder,
-) : Controller {
+) : DriveController, FolderController {
     companion object {
         private const val LOCATION_PREFIX = "http://localhost:33780/api/v1/drives"
         private fun createSystemUser(): User = User.create()
+    }
+
+    @PostMapping(
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun create(
+        @RequestBody request: CreateDriveRequest,
+    ): ResponseEntity<Unit> {
+        val (driveId) = createSystemUser().invoke(createDriveUseCase)
+            .with(
+                CreateDrive.Request(
+                    domain = request.domain,
+                    name = request.name,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.created(
+            URI.create("$LOCATION_PREFIX/$driveId")
+        )
+            .build()
     }
 
     @PostMapping(
@@ -27,7 +53,7 @@ class GraphfsApi(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE],
     )
-    override suspend fun createFolder(
+    override suspend fun create(
         @PathVariable("driveId") driveId: String,
         @RequestBody request: CreateFolderRequest,
     ): ResponseEntity<Unit> {
