@@ -1,4 +1,4 @@
-package ga.injuk.graphfs.application.controller.dto
+package ga.injuk.graphfs.infrastructure.web.dto.request
 
 import ga.injuk.graphfs.domain.Parent
 
