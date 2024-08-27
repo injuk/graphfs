@@ -25,3 +25,8 @@ Content-Type: application/json
 {
   "name": "VIDEO"
 }
+
+
+### [DELETE}] /drives/{id}
+DELETE http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3 HTTP/1.1
+Content-Type: application/json
