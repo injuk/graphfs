@@ -1,4 +1,4 @@
-package ga.injuk.graphfs.infrastructure.web.dto.request
+package ga.injuk.graphfs.application.controller.dto.request
 
 data class CreateDriveRequest(
     val domain: String,
