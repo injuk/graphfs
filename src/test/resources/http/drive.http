@@ -1,4 +1,4 @@
-### [POST]
+### [POST] /drives
 POST http://localhost:33780/api/v1/drives HTTP/1.1
 Content-Type: application/json
 
@@ -6,3 +6,8 @@ Content-Type: application/json
   "name": "MUSIC_DRIVE",
   "domain": "MUSIC"
 }
+
+
+### [GET] /drives
+GET http://localhost:33780/api/v1/drives?domain=VIDEO HTTP/1.1
+Content-Type: application/json
