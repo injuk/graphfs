@@ -22,6 +22,6 @@ class DeleteFolderImpl(
 
         // TODO: 리소스를 갖고 있는 폴더는 제거할 수 없도록 개선 필요
 
-        folderDataAccess.delete(folder).awaitSingleOrNull()
+        folderDataAccess.deleteAllDescendantsById(folder.id).awaitSingleOrNull()
     }
 }
