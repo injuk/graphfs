@@ -31,6 +31,7 @@ class GraphfsApi(
     private val createFolderUseCase: CreateFolder,
     private val getFolderUseCase: GetFolder,
     private val updateFolderUseCase: UpdateFolder,
+    private val deleteFolderUseCase: DeleteFolder,
 ) : DriveController, FolderController {
     companion object {
         private const val LOCATION_PREFIX = "http://localhost:33780/api/v1/drives"
@@ -160,6 +161,27 @@ class GraphfsApi(
             .build()
     }
 
+    @GetMapping(
+        value = ["/{driveId}/folders/{id}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun get(
+        @PathVariable driveId: String,
+        @PathVariable id: String,
+    ): ResponseEntity<Folder> {
+        val folder = createSystemUser()
+            .invoke(getFolderUseCase)
+            .with(
+                GetFolder.Request(
+                    id = id,
+                    driveId = driveId,
+                ),
+            )
+            .execute()
+
+        return ResponseEntity.ok(folder)
+    }
+
     @PatchMapping(
         value = ["/{driveId}/folders/{id}"],
         consumes = [MediaType.APPLICATION_JSON_VALUE],
@@ -183,24 +205,23 @@ class GraphfsApi(
             .build()
     }
 
-    @GetMapping(
+    @DeleteMapping(
         value = ["/{driveId}/folders/{id}"],
-        produces = [MediaType.APPLICATION_JSON_VALUE],
     )
-    override suspend fun get(
+    override suspend fun delete(
         @PathVariable driveId: String,
         @PathVariable id: String,
-    ): ResponseEntity<Folder> {
-        val folder = createSystemUser()
-            .invoke(getFolderUseCase)
+    ): ResponseEntity<Unit> {
+        createSystemUser().invoke(deleteFolderUseCase)
             .with(
-                GetFolder.Request(
+                DeleteFolder.Request(
                     id = id,
                     driveId = driveId,
-                ),
+                )
             )
             .execute()
 
-        return ResponseEntity.ok(folder)
+        return ResponseEntity.noContent()
+            .build()
     }
 }
