@@ -5,6 +5,7 @@ import ga.injuk.graphfs.application.controller.FolderController
 import ga.injuk.graphfs.application.controller.dto.request.CreateDriveRequest
 import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.request.UpdateDriveRequest
+import ga.injuk.graphfs.application.controller.dto.request.UpdateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.response.ListResponse
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Parent
@@ -25,7 +26,9 @@ class GraphfsApi(
     private val getDriveUseCase: GetDrive,
     private val updateDriveUseCase: UpdateDrive,
     private val deleteDriveUseCase: DeleteDrive,
+
     private val createFolderUseCase: CreateFolder,
+    private val updateFolderUseCase: UpdateFolder,
 ) : DriveController, FolderController {
     companion object {
         private const val LOCATION_PREFIX = "http://localhost:33780/api/v1/drives"
@@ -152,6 +155,29 @@ class GraphfsApi(
         return ResponseEntity.created(
             URI.create("$LOCATION_PREFIX/$driveId/folders/$folderId")
         )
+            .build()
+    }
+
+    @PatchMapping(
+        value = ["/{driveId}/folders/{id}"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun update(
+        @PathVariable driveId: String,
+        @PathVariable id: String,
+        @RequestBody request: UpdateFolderRequest,
+    ): ResponseEntity<Unit> {
+        createSystemUser().invoke(updateFolderUseCase)
+            .with(
+                UpdateFolder.Request(
+                    id = id,
+                    driveId = driveId,
+                    name = request.name,
+                )
+            )
+            .execute()
+
+        return ResponseEntity.noContent()
             .build()
     }
 }
