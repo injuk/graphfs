@@ -8,6 +8,7 @@ import ga.injuk.graphfs.application.controller.dto.request.UpdateDriveRequest
 import ga.injuk.graphfs.application.controller.dto.request.UpdateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.response.ListResponse
 import ga.injuk.graphfs.domain.Drive
+import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.*
@@ -28,6 +29,7 @@ class GraphfsApi(
     private val deleteDriveUseCase: DeleteDrive,
 
     private val createFolderUseCase: CreateFolder,
+    private val getFolderUseCase: GetFolder,
     private val updateFolderUseCase: UpdateFolder,
 ) : DriveController, FolderController {
     companion object {
@@ -179,5 +181,26 @@ class GraphfsApi(
 
         return ResponseEntity.noContent()
             .build()
+    }
+
+    @GetMapping(
+        value = ["/{driveId}/folders/{id}"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun get(
+        @PathVariable driveId: String,
+        @PathVariable id: String,
+    ): ResponseEntity<Folder> {
+        val folder = createSystemUser()
+            .invoke(getFolderUseCase)
+            .with(
+                GetFolder.Request(
+                    id = id,
+                    driveId = driveId,
+                ),
+            )
+            .execute()
+
+        return ResponseEntity.ok(folder)
     }
 }
