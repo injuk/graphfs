@@ -30,7 +30,7 @@ class InMemoryClient(
     private suspend fun fetchDrive(project: Project, driveId: String): Drive {
         logger.info("there is no cached drive... try to fetch from neo4j")
 
-        return driveDataAccess.findByProjectIdAndId(project.id, driveId).awaitSingleOrNull()
-            ?: throw RuntimeException("there is no drive($driveId) in project")
+        return driveDataAccess.findByProjectIdAndId(project.id, driveId)
+            .awaitSingleOrNull() ?: throw RuntimeException("there is no drive($driveId) in project")
     }
 }

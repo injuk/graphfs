@@ -22,7 +22,7 @@ class CreateFolderImpl(
 
         val parent: Folder? = request.parent?.let { parent ->
             folderDataAccess.findByDriveAndId(drive.id, parent.id)
-                .awaitSingleOrNull()
+                .awaitSingleOrNull() ?: throw RuntimeException("there is no folder(${parent.id}) in drive")
         }
 
         val folder = Folder.from(
@@ -32,12 +32,13 @@ class CreateFolderImpl(
                 createdBy = user,
             )
         )
-
-        if (parent == null) {
-            driveDataAccess.save(drive.copy(children = drive.children + folder)).awaitSingleOrNull()
-        } else {
-            folderDataAccess.save(parent.copy(children = parent.children + folder)).awaitSingleOrNull()
-        }
+            .also {
+                if (it.isRootFolder()) {
+                    driveDataAccess.save(drive.copy(children = drive.children + it))
+                } else {
+                    folderDataAccess.save(parent!!.copy(children = parent.children + it))
+                }.awaitSingleOrNull()
+            }
 
         folderDataAccess.save(folder).awaitSingleOrNull()
 
