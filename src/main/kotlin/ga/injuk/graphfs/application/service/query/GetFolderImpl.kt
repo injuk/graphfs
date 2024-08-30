@@ -23,6 +23,8 @@ class GetFolderImpl(
         val children = folderDataAccess.findChildrenById(folder.id)
             .toList()
 
+        // TODO: resource 목록도 함께 반환하도록 개선할 것
+
         return folder.copy(children = children)
     }
 }
