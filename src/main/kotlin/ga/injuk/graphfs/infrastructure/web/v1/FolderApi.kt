@@ -5,12 +5,11 @@ import ga.injuk.graphfs.application.controller.FolderController
 import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.request.UpdateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.response.GetFolderResponse
+import ga.injuk.graphfs.application.controller.dto.response.ListResponse
+import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.folder.CreateFolder
-import ga.injuk.graphfs.domain.useCase.folder.DeleteFolder
-import ga.injuk.graphfs.domain.useCase.folder.GetFolder
-import ga.injuk.graphfs.domain.useCase.folder.UpdateFolder
+import ga.injuk.graphfs.domain.useCase.folder.*
 import ga.injuk.graphfs.infrastructure.web.WebConstants
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -23,6 +22,7 @@ import java.net.URI
 @RequestMapping(WebConstants.API_PREFIX)
 class FolderApi(
     private val createFolderUseCase: CreateFolder,
+    private val listFoldersUseCase: ListFolders,
     private val getFolderUseCase: GetFolder,
     private val updateFolderUseCase: UpdateFolder,
     private val deleteFolderUseCase: DeleteFolder,
@@ -55,6 +55,31 @@ class FolderApi(
             URI.create("$locationPrefix/$driveId/folders/$folderId")
         )
             .build()
+    }
+
+    @GetMapping(
+        value = ["/{driveId}/folders"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun list(
+        @PathVariable driveId: String,
+        @RequestParam(value = "name") name: String?,
+    ): ResponseEntity<ListResponse<Folder>> {
+        val folders = User.create()
+            .invoke(listFoldersUseCase)
+            .with(
+                ListFolders.Request(
+                    driveId = driveId,
+                    name = name,
+                ),
+            )
+            .execute()
+
+        return ResponseEntity.ok(
+            ListResponse(
+                items = folders,
+            )
+        )
     }
 
     @GetMapping(
