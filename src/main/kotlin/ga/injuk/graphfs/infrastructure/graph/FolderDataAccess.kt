@@ -13,6 +13,9 @@ interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
     @Query("MATCH (drive: Drive)-[:DIRECT_CHILD*]->(folders: Folder) WHERE drive.id = \$driveId RETURN folders ORDER BY folders.depth")
     fun findAllByDriveId(driveId: String): Flux<Folder>
 
+    @Query("MATCH (drive: Drive)-[:DIRECT_CHILD*]->(folders: Folder) WHERE drive.id = \$driveId AND folders.name STARTS WITH \$name RETURN folders ORDER BY folders.depth")
+    fun findAllByDriveIdAndName(driveId: String, name: String): Flux<Folder>
+
     @Query("MATCH (drive: Drive)-[:DIRECT_CHILD]->(roots: Folder) WHERE drive.projectId = \$projectId AND drive.id = \$driveId RETURN roots")
     fun findRootsByProjectIdAndDriveId(projectId: String, driveId: String): Flux<Folder>
 

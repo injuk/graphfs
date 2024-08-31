@@ -16,7 +16,10 @@ class ListFoldersImpl(
     override suspend fun execute(user: User, request: ListFolders.Request): List<Folder> {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
-        return folderDataAccess.findAllByDriveId(drive.id)
-            .toList()
+        return if (request.name == null) {
+            folderDataAccess.findAllByDriveId(drive.id)
+        } else {
+            folderDataAccess.findAllByDriveIdAndName(drive.id, request.name)
+        }.toList()
     }
 }
