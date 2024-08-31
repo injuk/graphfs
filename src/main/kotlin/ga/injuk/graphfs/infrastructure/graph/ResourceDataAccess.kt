@@ -12,4 +12,14 @@ interface ResourceDataAccess : ReactiveNeo4jRepository<Resource, String> {
 
     @Query("MATCH (resource: Resource)-[:RESOURCE_OF]->(folder: Folder) WHERE resource.id = \$id AND folder.id = \$folderId RETURN resource")
     fun findByFolderIdAndId(folderId: String, id: String): Mono<Resource>
+
+    @Query(
+        "MATCH (resource: Resource)-[oldRelation:RESOURCE_OF]->(:Folder) " +
+                "MATCH (newFolder: Folder) " +
+                "WHERE resource.id = \$id AND newFolder.id = \$newFolderId " +
+                "CREATE (resource)-[:RESOURCE_OF]->(newFolder) " +
+                "DELETE oldRelation " +
+                "RETURN resource"
+    )
+    fun moveFolder(id: String, newFolderId: String): Mono<Resource>
 }
