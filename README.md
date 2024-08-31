@@ -35,8 +35,8 @@ graphfs
 
 ### TODO
 - [x] resource 추가 API 개발
-- [ ] resource 삭제 API 개발
-- [ ] resource 수정(이동) API 개발
+- [x] resource 삭제 API 개발
+- [x] resource 수정(이동) API 개발
 - [x] folder 상세 API가 resource를 함께 반환하도록 개선
   - 이건 resource 목록 조회 API로 해결하는게 맞다고 봄
 - [x] folder 삭제 API가 resource 존재 여부를 함께 체크하도록 개선
