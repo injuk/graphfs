@@ -1,4 +1,6 @@
-package ga.injuk.graphfs.domain.useCase
+package ga.injuk.graphfs.domain.useCase.drive
+
+import ga.injuk.graphfs.domain.useCase.UseCase
 
 interface DeleteDrive : UseCase<DeleteDrive.Request, Unit> {
     override val name: String

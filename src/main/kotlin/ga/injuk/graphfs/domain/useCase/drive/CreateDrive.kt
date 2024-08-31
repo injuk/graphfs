@@ -1,4 +1,6 @@
-package ga.injuk.graphfs.domain.useCase
+package ga.injuk.graphfs.domain.useCase.drive
+
+import ga.injuk.graphfs.domain.useCase.UseCase
 
 interface CreateDrive : UseCase<CreateDrive.Request, CreateDrive.Response> {
     override val name: String

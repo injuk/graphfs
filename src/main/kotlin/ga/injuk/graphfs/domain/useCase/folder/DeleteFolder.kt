@@ -1,4 +1,6 @@
-package ga.injuk.graphfs.domain.useCase
+package ga.injuk.graphfs.domain.useCase.folder
+
+import ga.injuk.graphfs.domain.useCase.UseCase
 
 interface DeleteFolder : UseCase<DeleteFolder.Request, Unit> {
     override val name: String

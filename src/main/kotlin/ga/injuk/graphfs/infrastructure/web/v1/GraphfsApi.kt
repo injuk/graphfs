@@ -11,7 +11,11 @@ import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.*
+import ga.injuk.graphfs.domain.useCase.drive.*
+import ga.injuk.graphfs.domain.useCase.folder.CreateFolder
+import ga.injuk.graphfs.domain.useCase.folder.DeleteFolder
+import ga.injuk.graphfs.domain.useCase.folder.GetFolder
+import ga.injuk.graphfs.domain.useCase.folder.UpdateFolder
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated

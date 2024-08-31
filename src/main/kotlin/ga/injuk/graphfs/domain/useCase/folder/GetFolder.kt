@@ -1,6 +1,7 @@
-package ga.injuk.graphfs.domain.useCase
+package ga.injuk.graphfs.domain.useCase.folder
 
 import ga.injuk.graphfs.domain.Folder
+import ga.injuk.graphfs.domain.useCase.UseCase
 
 interface GetFolder : UseCase<GetFolder.Request, Folder> {
     override val name: String

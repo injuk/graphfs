@@ -3,7 +3,7 @@ package ga.injuk.graphfs.application.service.query
 import ga.injuk.graphfs.application.ReactiveExtension.toList
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.GetDrive
+import ga.injuk.graphfs.domain.useCase.drive.GetDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull

@@ -2,7 +2,7 @@ package ga.injuk.graphfs.application.service.command
 
 import ga.injuk.graphfs.application.ReactiveExtension.toList
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.DeleteDrive
+import ga.injuk.graphfs.domain.useCase.drive.DeleteDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull

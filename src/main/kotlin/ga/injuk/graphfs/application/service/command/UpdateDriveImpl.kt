@@ -1,7 +1,7 @@
 package ga.injuk.graphfs.application.service.command
 
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.UpdateDrive
+import ga.injuk.graphfs.domain.useCase.drive.UpdateDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service

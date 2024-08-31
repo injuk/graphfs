@@ -3,7 +3,7 @@ package ga.injuk.graphfs.application.service.command
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.CreateFolder
+import ga.injuk.graphfs.domain.useCase.folder.CreateFolder
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull

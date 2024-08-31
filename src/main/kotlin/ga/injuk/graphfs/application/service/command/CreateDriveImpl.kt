@@ -2,7 +2,7 @@ package ga.injuk.graphfs.application.service.command
 
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.User
-import ga.injuk.graphfs.domain.useCase.CreateDrive
+import ga.injuk.graphfs.domain.useCase.drive.CreateDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
