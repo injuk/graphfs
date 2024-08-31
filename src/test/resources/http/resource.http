@@ -3,6 +3,17 @@ POST http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/f
 Content-Type: application/json
 
 
+### [PATCH] /drives/{driveId}/folders/{folderId}/resources/{id}
+PATCH http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/folders/dfcd2a03-0bc2-4fb1-aa95-b3c8c467e2f7/resources/59f80547-485e-4681-a641-c4feeabcf851 HTTP/1.1
+Content-Type: application/json
+
+{
+  "to": {
+    "id": "44851a11-ca0b-4857-8df8-560b6bcf2d30"
+  }
+}
+
+
 ### [DELETE] /drives/{driveId}/folders/{folderId}/resources/{id}
 DELETE http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/folders/dfcd2a03-0bc2-4fb1-aa95-b3c8c467e2f7/resources/daa31cfc-40bc-4a59-8dbc-7cb2aa9768b8 HTTP/1.1
 Content-Type: application/json
