@@ -1,5 +1,6 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.folder.DeleteFolder
@@ -22,6 +23,6 @@ class DeleteFolderImpl(
 
         // TODO: 리소스를 갖고 있는 폴더는 제거할 수 없도록 개선 필요
 
-        folderDataAccess.deleteAllDescendantsById(folder.id).awaitSingleOrNull()
+        folderDataAccess.deleteAllDescendantsById(folder.id).await()
     }
 }

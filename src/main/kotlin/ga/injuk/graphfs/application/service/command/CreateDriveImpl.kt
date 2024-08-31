@@ -1,10 +1,10 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.drive.CreateDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
-import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -22,7 +22,7 @@ class CreateDriveImpl(
             )
         )
             .also { drive ->
-                driveDataAccess.save(drive).awaitSingleOrNull()
+                driveDataAccess.save(drive).await()
             }
 
         return CreateDrive.Response(id)

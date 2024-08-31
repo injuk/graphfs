@@ -1,5 +1,6 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.folder.UpdateFolder
@@ -23,6 +24,6 @@ class UpdateFolderImpl(
         folder.copy(
             name = request.name,
         )
-            .also { folderDataAccess.save(it).awaitSingleOrNull() }
+            .also { folderDataAccess.save(it).await() }
     }
 }

@@ -1,5 +1,6 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.Resource
 import ga.injuk.graphfs.domain.User
@@ -24,7 +25,7 @@ class CreateResourceImpl(
             .awaitSingleOrNull() ?: throw RuntimeException("there is no folder(${request.folderId}) in drive")
 
         val resource = Resource.from(folder)
-            .also { resourceDataAccess.save(it).awaitSingleOrNull() }
+            .also { resourceDataAccess.save(it).await() }
 
         return CreateResource.Response(id = resource.id)
     }

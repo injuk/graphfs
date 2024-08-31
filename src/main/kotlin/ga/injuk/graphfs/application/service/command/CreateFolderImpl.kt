@@ -1,5 +1,6 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.User
@@ -37,10 +38,10 @@ class CreateFolderImpl(
                     driveDataAccess.save(drive.copy(children = drive.children + it))
                 } else {
                     folderDataAccess.save(parent!!.copy(children = parent.children + it))
-                }.awaitSingleOrNull()
+                }.await()
             }
 
-        folderDataAccess.save(folder).awaitSingleOrNull()
+        folderDataAccess.save(folder).await()
 
         return CreateFolder.Response(id = folder.id)
     }

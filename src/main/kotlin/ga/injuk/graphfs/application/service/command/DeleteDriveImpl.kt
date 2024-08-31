@@ -1,5 +1,6 @@
 package ga.injuk.graphfs.application.service.command
 
+import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.ReactiveExtension.toList
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.drive.DeleteDrive
@@ -23,6 +24,6 @@ class DeleteDriveImpl(
             .toList()
             .also { if (it.isNotEmpty()) throw RuntimeException("cannot delete non-empty drive") }
 
-        driveDataAccess.delete(drive).awaitSingleOrNull()
+        driveDataAccess.delete(drive).await()
     }
 }
