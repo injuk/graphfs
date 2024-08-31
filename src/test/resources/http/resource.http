@@ -1,0 +1,4 @@
+### [POST] /drives/{driveId}/folders/{folderId}/resources
+POST http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/folders/8b487b6f-4daa-4c7c-947d-86db1d4fe520/resources HTTP/1.1
+Content-Type: application/json
+
