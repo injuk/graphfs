@@ -39,7 +39,6 @@ class GraphfsApi(
 ) : DriveController, FolderController {
     companion object {
         private const val LOCATION_PREFIX = "http://localhost:33780/api/v1/drives"
-        private fun createSystemUser(): User = User.create()
     }
 
     @PostMapping(
@@ -48,7 +47,8 @@ class GraphfsApi(
     override suspend fun create(
         @RequestBody request: CreateDriveRequest,
     ): ResponseEntity<Unit> {
-        val (driveId) = createSystemUser().invoke(createDriveUseCase)
+        val (driveId) = User.create()
+            .invoke(createDriveUseCase)
             .with(
                 CreateDrive.Request(
                     domain = request.domain,
@@ -69,7 +69,8 @@ class GraphfsApi(
     override suspend fun list(
         @RequestParam domain: String?,
     ): ResponseEntity<ListResponse<Drive>> {
-        val drives = createSystemUser().invoke(listDrivesUseCase)
+        val drives = User.create()
+            .invoke(listDrivesUseCase)
             .with(
                 ListDrives.Request(
                     domain = domain,
@@ -89,7 +90,8 @@ class GraphfsApi(
     override suspend fun get(
         @PathVariable id: String,
     ): ResponseEntity<Drive> {
-        val drive = createSystemUser().invoke(getDriveUseCase)
+        val drive = User.create()
+            .invoke(getDriveUseCase)
             .with(
                 GetDrive.Request(
                     id = id,
@@ -110,7 +112,8 @@ class GraphfsApi(
         @PathVariable id: String,
         @RequestBody request: UpdateDriveRequest,
     ): ResponseEntity<Unit> {
-        createSystemUser().invoke(updateDriveUseCase)
+        User.create()
+            .invoke(updateDriveUseCase)
             .with(
                 UpdateDrive.Request(
                     id = id,
@@ -129,7 +132,8 @@ class GraphfsApi(
     override suspend fun delete(
         @PathVariable id: String,
     ): ResponseEntity<Unit> {
-        createSystemUser().invoke(deleteDriveUseCase)
+        User.create()
+            .invoke(deleteDriveUseCase)
             .with(
                 DeleteDrive.Request(
                     id = id,
@@ -149,7 +153,8 @@ class GraphfsApi(
         @PathVariable("driveId") driveId: String,
         @RequestBody request: CreateFolderRequest,
     ): ResponseEntity<Unit> {
-        val (folderId) = createSystemUser().invoke(createFolderUseCase)
+        val (folderId) = User.create()
+            .invoke(createFolderUseCase)
             .with(
                 CreateFolder.Request(
                     name = request.name,
@@ -173,7 +178,7 @@ class GraphfsApi(
         @PathVariable driveId: String,
         @PathVariable id: String,
     ): ResponseEntity<Folder> {
-        val folder = createSystemUser()
+        val folder = User.create()
             .invoke(getFolderUseCase)
             .with(
                 GetFolder.Request(
@@ -195,7 +200,8 @@ class GraphfsApi(
         @PathVariable id: String,
         @RequestBody request: UpdateFolderRequest,
     ): ResponseEntity<Unit> {
-        createSystemUser().invoke(updateFolderUseCase)
+        User.create()
+            .invoke(updateFolderUseCase)
             .with(
                 UpdateFolder.Request(
                     id = id,
@@ -216,7 +222,8 @@ class GraphfsApi(
         @PathVariable driveId: String,
         @PathVariable id: String,
     ): ResponseEntity<Unit> {
-        createSystemUser().invoke(deleteFolderUseCase)
+        User.create()
+            .invoke(deleteFolderUseCase)
             .with(
                 DeleteFolder.Request(
                     id = id,
