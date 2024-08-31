@@ -37,7 +37,8 @@ graphfs
 - [x] resource 추가 API 개발
 - [ ] resource 삭제 API 개발
 - [ ] resource 수정(이동) API 개발
-- [ ] folder 상세 API가 resource를 함께 반환하도록 개선
+- [x] folder 상세 API가 resource를 함께 반환하도록 개선
+  - 이건 resource 목록 조회 API로 해결하는게 맞다고 봄
 - [x] folder 삭제 API가 resource 존재 여부를 함께 체크하도록 개선
 - [ ] folder 이름 기반 조회 API 개발
 - [ ] folder 조상 조회(?) API 개발
