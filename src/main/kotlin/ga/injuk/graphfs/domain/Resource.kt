@@ -11,12 +11,12 @@ data class Resource(
     val id: String,
 
     @Relationship(type = "RESOURCE_OF", direction = Relationship.Direction.OUTGOING)
-    val folder: Folder,
+    val folder: List<Folder>,
 ) {
     companion object {
         fun from(folder: Folder): Resource = Resource(
             id = UUID.randomUUID().toString(),
-            folder = folder,
+            folder = listOf(folder),
         )
     }
 }
