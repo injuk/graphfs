@@ -4,7 +4,7 @@ import ga.injuk.graphfs.application.configuration.Beans
 import ga.injuk.graphfs.application.controller.FolderController
 import ga.injuk.graphfs.application.controller.dto.request.CreateFolderRequest
 import ga.injuk.graphfs.application.controller.dto.request.UpdateFolderRequest
-import ga.injuk.graphfs.domain.Folder
+import ga.injuk.graphfs.application.controller.dto.response.GetFolderResponse
 import ga.injuk.graphfs.domain.Parent
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.folder.CreateFolder
@@ -64,8 +64,8 @@ class FolderApi(
     override suspend fun get(
         @PathVariable driveId: String,
         @PathVariable id: String,
-    ): ResponseEntity<Folder> {
-        val folder = User.create()
+    ): ResponseEntity<GetFolderResponse> {
+        val (folder, ancestors) = User.create()
             .invoke(getFolderUseCase)
             .with(
                 GetFolder.Request(
@@ -75,7 +75,24 @@ class FolderApi(
             )
             .execute()
 
-        return ResponseEntity.ok(folder)
+        return ResponseEntity.ok(
+            GetFolderResponse(
+                id = folder.id,
+                name = folder.name,
+                parentId = folder.name,
+                ancestors = ancestors.map {
+                    GetFolderResponse.AncestorFolder(
+                        id = it.id,
+                        name = it.name,
+                        depth = it.depth,
+                    )
+                },
+                depth = folder.depth,
+                creator = folder.creator,
+                createdAt = folder.createdAt,
+                children = folder.children,
+            )
+        )
     }
 
     @PatchMapping(
