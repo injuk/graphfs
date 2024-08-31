@@ -2,6 +2,7 @@ package ga.injuk.graphfs.application.configuration
 
 import org.neo4j.cypherdsl.core.renderer.Dialect
 import org.neo4j.driver.Driver
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.neo4j.core.ReactiveDatabaseSelectionProvider
@@ -23,5 +24,14 @@ class Beans {
         databaseNameProvider: ReactiveDatabaseSelectionProvider,
     ): ReactiveNeo4jTransactionManager {
         return ReactiveNeo4jTransactionManager(driver, databaseNameProvider)
+    }
+
+    @ConfigurationProperties(prefix = "server")
+    data class GraphfsProperty(
+        val port: Int,
+        val address: String,
+    ) {
+        val locationPrefix: String
+            get() = "http://$address:$port"
     }
 }
