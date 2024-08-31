@@ -3,6 +3,7 @@ package ga.injuk.graphfs.infrastructure.setting
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.Drive
 import ga.injuk.graphfs.domain.Project
+import ga.injuk.graphfs.domain.exception.NoSuchResourceException
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.slf4j.LoggerFactory
@@ -31,6 +32,6 @@ class InMemoryClient(
         logger.info("there is no cached drive... try to fetch from neo4j")
 
         return driveDataAccess.findByProjectIdAndId(project.id, driveId)
-            .awaitSingleOrNull() ?: throw RuntimeException("there is no drive($driveId) in project")
+            .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no drive($driveId) in project")
     }
 }

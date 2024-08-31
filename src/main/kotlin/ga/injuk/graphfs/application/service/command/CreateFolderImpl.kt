@@ -4,6 +4,7 @@ import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.User
+import ga.injuk.graphfs.domain.exception.NoSuchResourceException
 import ga.injuk.graphfs.domain.useCase.folder.CreateFolder
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
@@ -23,7 +24,7 @@ class CreateFolderImpl(
 
         val parent: Folder? = request.parent?.let { parent ->
             folderDataAccess.findByDriveAndId(drive.id, parent.id)
-                .awaitSingleOrNull() ?: throw RuntimeException("there is no folder(${parent.id}) in drive")
+                .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${parent.id}) in drive")
         }
 
         val folder = Folder.from(

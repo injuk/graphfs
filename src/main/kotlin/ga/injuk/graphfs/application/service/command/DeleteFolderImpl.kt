@@ -4,6 +4,7 @@ import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.application.ReactiveExtension.toList
 import ga.injuk.graphfs.application.gateway.client.SettingClient
 import ga.injuk.graphfs.domain.User
+import ga.injuk.graphfs.domain.exception.NoSuchResourceException
 import ga.injuk.graphfs.domain.useCase.folder.DeleteFolder
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
 import ga.injuk.graphfs.infrastructure.graph.ResourceDataAccess
@@ -22,11 +23,11 @@ class DeleteFolderImpl(
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
         val folder = folderDataAccess.findByDriveAndId(drive.id, request.id)
-            .awaitSingleOrNull() ?: throw RuntimeException("there is no folder(${request.id}) in drive")
+            .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.id}) in drive")
 
         resourceDataAccess.findResourcesOfDescendantsByFolderId(folder.id)
             .toList()
-            .also { if (it.isNotEmpty()) throw RuntimeException("there is ${it.size} resources exists in folder(${folder.id}) or sub-folders") }
+            .also { if (it.isNotEmpty()) throw IllegalStateException("there is ${it.size} resources exists in folder(${folder.id}) or sub-folders") }
 
         folderDataAccess.deleteAllDescendantsById(folder.id).await()
     }

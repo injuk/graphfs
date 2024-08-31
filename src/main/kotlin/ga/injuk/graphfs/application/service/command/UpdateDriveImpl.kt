@@ -2,6 +2,7 @@ package ga.injuk.graphfs.application.service.command
 
 import ga.injuk.graphfs.application.ReactiveExtension.await
 import ga.injuk.graphfs.domain.User
+import ga.injuk.graphfs.domain.exception.NoSuchResourceException
 import ga.injuk.graphfs.domain.useCase.drive.UpdateDrive
 import ga.injuk.graphfs.infrastructure.graph.DriveDataAccess
 import kotlinx.coroutines.reactor.awaitSingleOrNull
@@ -15,7 +16,7 @@ class UpdateDriveImpl(
     @Transactional
     override suspend fun execute(user: User, request: UpdateDrive.Request) {
         val drive = driveDataAccess.findByProjectIdAndId(user.project.id, request.id)
-            .awaitSingleOrNull() ?: throw RuntimeException("there is no drive(${request.id}) in project")
+            .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no drive(${request.id}) in project")
 
         drive.copy(
             name = request.name,
