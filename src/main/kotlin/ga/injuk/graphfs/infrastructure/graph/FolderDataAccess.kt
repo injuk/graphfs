@@ -16,6 +16,9 @@ interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
     @Query("MATCH (folder: Folder)-[:DIRECT_CHILD]->(children: Folder) WHERE folder.id = \$id RETURN children")
     fun findChildrenById(id: String): Flux<Folder>
 
+    @Query("MATCH (ancestors: Folder)-[:DIRECT_CHILD*]->(folder: Folder) WHERE folder.id = \$id RETURN ancestors ORDER BY ancestors.depth")
+    fun findAncestorsById(id: String): Flux<Folder>
+
     @Query("MATCH (folder: Folder)-[:DIRECT_CHILD*0..]->(descendants: Folder) WHERE folder.id = \$id DETACH DELETE descendants")
     fun deleteAllDescendantsById(id: String): Mono<Void>
 }

@@ -2,7 +2,6 @@ package ga.injuk.graphfs.application.service.query
 
 import ga.injuk.graphfs.application.ReactiveExtension.toList
 import ga.injuk.graphfs.application.gateway.client.SettingClient
-import ga.injuk.graphfs.domain.Folder
 import ga.injuk.graphfs.domain.User
 import ga.injuk.graphfs.domain.useCase.folder.GetFolder
 import ga.injuk.graphfs.infrastructure.graph.FolderDataAccess
@@ -14,7 +13,7 @@ class GetFolderImpl(
     private val folderDataAccess: FolderDataAccess,
     private val settingClient: SettingClient,
 ) : GetFolder {
-    override suspend fun execute(user: User, request: GetFolder.Request): Folder {
+    override suspend fun execute(user: User, request: GetFolder.Request): GetFolder.Response {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
         val folder = folderDataAccess.findByDriveAndId(drive.id, request.id)
@@ -23,6 +22,12 @@ class GetFolderImpl(
         val children = folderDataAccess.findChildrenById(folder.id)
             .toList()
 
-        return folder.copy(children = children)
+        val ancestors = folderDataAccess.findAncestorsById(folder.id)
+            .toList()
+
+        return GetFolder.Response(
+            folder = folder.copy(children = children),
+            ancestors = ancestors,
+        )
     }
 }
