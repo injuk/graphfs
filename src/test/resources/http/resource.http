@@ -2,3 +2,8 @@
 POST http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/folders/8b487b6f-4daa-4c7c-947d-86db1d4fe520/resources HTTP/1.1
 Content-Type: application/json
 
+
+### [DELETE] /drives/{driveId}/folders/{folderId}/resources/{id}
+DELETE http://localhost:33780/api/v1/drives/f7e8a395-04ed-4f19-aa68-fd829ef4fde3/folders/dfcd2a03-0bc2-4fb1-aa95-b3c8c467e2f7/resources/daa31cfc-40bc-4a59-8dbc-7cb2aa9768b8 HTTP/1.1
+Content-Type: application/json
+
