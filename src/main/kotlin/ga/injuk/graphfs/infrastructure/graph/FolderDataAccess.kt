@@ -36,4 +36,28 @@ interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
 
     @Query("MATCH (folder: Folder)-[:DIRECT_CHILD*0..]->(descendants: Folder) WHERE folder.id = \$id DETACH DELETE descendants")
     fun deleteAllDescendantsById(id: String): Mono<Void>
+
+    @Query(
+        "MATCH (drive: Drive) WHERE drive.id = \$driveId " +
+                "MATCH ()-[oldRelation:DIRECT_CHILD]->(targetFolder: Folder) WHERE targetFolder.id = \$id " +
+                "CREATE (drive)-[:DIRECT_CHILD]->(targetFolder) " +
+                "SET targetFolder.parentId = null " +
+                "DELETE oldRelation " +
+                "WITH targetFolder, 1 - targetFolder.depth as increment " +
+                "MATCH (targetFolder)-[:DIRECT_CHILD*0..]->(affectedFolders: Folder) " +
+                "SET affectedFolders.depth = affectedFolders.depth + increment"
+    )
+    fun updateParentToDriveByDriveIdAndId(driveId: String, id: String): Mono<Void>
+
+    @Query(
+        "MATCH ()-[oldRelation:DIRECT_CHILD]->(targetFolder: Folder) WHERE targetFolder.id = \$targetId " +
+                "MATCH (newParent: Folder) WHERE newParent.id = \$newParentId AND NOT (targetFolder)-[:DIRECT_CHILD*0..]->(newParent) " +
+                "CREATE (newParent)-[:DIRECT_CHILD]->(targetFolder) " +
+                "SET targetFolder.parentId = \$newParentId " +
+                "DELETE oldRelation " +
+                "WITH targetFolder, newParent.depth - targetFolder.depth + 1 as increment " +
+                "MATCH (targetFolder)-[:DIRECT_CHILD*0..]->(affectedFolders: Folder) " +
+                "SET affectedFolders.depth = affectedFolders.depth + increment"
+    )
+    fun updateParentById(targetId: String, newParentId: String): Mono<Void>
 }
