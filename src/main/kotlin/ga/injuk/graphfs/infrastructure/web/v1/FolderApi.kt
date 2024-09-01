@@ -162,6 +162,7 @@ class FolderApi(
                     id = id,
                     driveId = driveId,
                     name = request.name,
+                    parentId = request.parentId,
                 )
             )
             .execute()
