@@ -11,6 +11,7 @@ interface FolderController : Controller {
     suspend fun create(driveId: String, request: CreateFolderRequest): ResponseEntity<Unit>
     suspend fun list(driveId: String, name: String?): ResponseEntity<ListResponse<Folder>>
     suspend fun get(driveId: String, id: String): ResponseEntity<GetFolderResponse>
+    suspend fun listElders(driveId: String, id: String): ResponseEntity<ListResponse<Folder>>
     suspend fun update(driveId: String, id: String, request: UpdateFolderRequest): ResponseEntity<Unit>
     suspend fun delete(driveId: String, id: String): ResponseEntity<Unit>
 }

@@ -24,6 +24,7 @@ class FolderApi(
     private val createFolderUseCase: CreateFolder,
     private val listFoldersUseCase: ListFolders,
     private val getFolderUseCase: GetFolder,
+    private val listElderFoldersUseCase: ListElderFolders,
     private val updateFolderUseCase: UpdateFolder,
     private val deleteFolderUseCase: DeleteFolder,
 
@@ -116,6 +117,31 @@ class FolderApi(
                 creator = folder.creator,
                 createdAt = folder.createdAt,
                 children = folder.children,
+            )
+        )
+    }
+
+    @GetMapping(
+        value = ["/{driveId}/folders/{id}/elders"],
+        produces = [MediaType.APPLICATION_JSON_VALUE],
+    )
+    override suspend fun listElders(
+        @PathVariable driveId: String,
+        @PathVariable id: String,
+    ): ResponseEntity<ListResponse<Folder>> {
+        val elders = User.create()
+            .invoke(listElderFoldersUseCase)
+            .with(
+                ListElderFolders.Request(
+                    driveId = driveId,
+                    id = id,
+                ),
+            )
+            .execute()
+
+        return ResponseEntity.ok(
+            ListResponse(
+                items = elders,
             )
         )
     }
