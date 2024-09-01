@@ -26,11 +26,11 @@ interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
     fun findAncestorsById(id: String): Flux<Folder>
 
     @Query(
-        "MATCH (ancestors: Folder)-[:DIRECT_CHILD*]->(folder: Folder) WHERE folder.id = \$folderId " +
+        "CALL { MATCH (ancestors: Folder)-[:DIRECT_CHILD*]->(folder: Folder) WHERE folder.id = \$id " +
                 "MATCH (ancestors)-[:DIRECT_CHILD]->(elders: Folder) RETURN elders " +
                 "UNION " +
-                "MATCH (drive :Drive)-[:DIRECT_CHILD]->(elders: Folder) WHERE drive.id = \$driveId" +
-                "RETURN elders ORDER BY elders.depth"
+                "MATCH (drive :Drive)-[:DIRECT_CHILD]->(elders: Folder) WHERE drive.id = \$driveId " +
+                "RETURN elders } RETURN elders ORDER BY elders.depth"
     )
     fun findEldersByDriveIdAndId(driveId: String, id: String): Flux<Folder>
 
