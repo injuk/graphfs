@@ -23,7 +23,7 @@ class CreateFolderImpl(
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
         val parent: Folder? = request.parent?.let { parent ->
-            folderDataAccess.findByDriveAndId(drive.id, parent.id)
+            folderDataAccess.findByDriveIdAndId(drive.id, parent.id)
                 .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${parent.id}) in drive")
         }
 

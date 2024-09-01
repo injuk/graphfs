@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono
 
 interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
     @Query("MATCH (drive: Drive)-[:DIRECT_CHILD*]->(folder: Folder) WHERE drive.id = \$driveId AND folder.id = \$id RETURN folder LIMIT 1")
-    fun findByDriveAndId(driveId: String, id: String): Mono<Folder>
+    fun findByDriveIdAndId(driveId: String, id: String): Mono<Folder>
 
     @Query("MATCH (drive: Drive)-[:DIRECT_CHILD*]->(folders: Folder) WHERE drive.id = \$driveId RETURN folders ORDER BY folders.depth")
     fun findAllByDriveId(driveId: String): Flux<Folder>
@@ -24,6 +24,15 @@ interface FolderDataAccess : ReactiveNeo4jRepository<Folder, String> {
 
     @Query("MATCH (ancestors: Folder)-[:DIRECT_CHILD*]->(folder: Folder) WHERE folder.id = \$id RETURN ancestors ORDER BY ancestors.depth")
     fun findAncestorsById(id: String): Flux<Folder>
+
+    @Query(
+        "MATCH (ancestors: Folder)-[:DIRECT_CHILD*]->(folder: Folder) WHERE folder.id = \$folderId " +
+                "MATCH (ancestors)-[:DIRECT_CHILD]->(elders: Folder) RETURN elders " +
+                "UNION " +
+                "MATCH (drive :Drive)-[:DIRECT_CHILD]->(elders: Folder) WHERE drive.id = \$driveId" +
+                "RETURN elders"
+    )
+    fun findEldersByDriveIdAndId(driveId: String, id: String): Flux<Folder>
 
     @Query("MATCH (folder: Folder)-[:DIRECT_CHILD*0..]->(descendants: Folder) WHERE folder.id = \$id DETACH DELETE descendants")
     fun deleteAllDescendantsById(id: String): Mono<Void>

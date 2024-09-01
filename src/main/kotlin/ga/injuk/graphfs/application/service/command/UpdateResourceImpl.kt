@@ -21,13 +21,13 @@ class UpdateResourceImpl(
     override suspend fun execute(user: User, request: UpdateResource.Request) {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
-        val oldFolder = folderDataAccess.findByDriveAndId(drive.id, request.folderId)
+        val oldFolder = folderDataAccess.findByDriveIdAndId(drive.id, request.folderId)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.folderId}) in drive")
 
         val resource = resourceDataAccess.findByFolderIdAndId(oldFolder.id, request.id)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no resource(${request.id}) in folder")
 
-        val newFolder = folderDataAccess.findByDriveAndId(drive.id, request.newFolderId)
+        val newFolder = folderDataAccess.findByDriveIdAndId(drive.id, request.newFolderId)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.newFolderId}) in drive")
 
         resourceDataAccess.moveFolder(resource.id, newFolder.id).await()

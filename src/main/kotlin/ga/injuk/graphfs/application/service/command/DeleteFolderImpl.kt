@@ -22,7 +22,7 @@ class DeleteFolderImpl(
     override suspend fun execute(user: User, request: DeleteFolder.Request) {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
-        val folder = folderDataAccess.findByDriveAndId(drive.id, request.id)
+        val folder = folderDataAccess.findByDriveIdAndId(drive.id, request.id)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.id}) in drive")
 
         resourceDataAccess.findResourcesOfDescendantsByFolderId(folder.id)

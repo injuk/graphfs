@@ -22,7 +22,7 @@ class CreateResourceImpl(
     override suspend fun execute(user: User, request: CreateResource.Request): CreateResource.Response {
         val drive = settingClient.getDriveInfo(user.project, request.driveId)
 
-        val folder = folderDataAccess.findByDriveAndId(drive.id, request.folderId)
+        val folder = folderDataAccess.findByDriveIdAndId(drive.id, request.folderId)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.folderId}) in drive")
 
         val resource = Resource.from(folder)
