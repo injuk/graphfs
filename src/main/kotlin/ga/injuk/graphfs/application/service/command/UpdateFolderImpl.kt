@@ -22,9 +22,15 @@ class UpdateFolderImpl(
         val folder = folderDataAccess.findByDriveIdAndId(drive.id, request.id)
             .awaitSingleOrNull() ?: throw NoSuchResourceException("there is no folder(${request.id}) in drive")
 
-        folder.copy(
-            name = request.name,
-        )
-            .also { folderDataAccess.save(it).await() }
+        if (request.name != null) {
+            folder.copy(
+                name = request.name,
+            )
+                .also { folderDataAccess.save(it).await() }
+        }
+
+        if (request.parentId != null) {
+            // move
+        }
     }
 }

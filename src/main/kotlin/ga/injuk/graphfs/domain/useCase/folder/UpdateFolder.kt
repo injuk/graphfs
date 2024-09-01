@@ -9,6 +9,11 @@ interface UpdateFolder : UseCase<UpdateFolder.Request, Unit> {
     data class Request(
         val id: String,
         val driveId: String,
-        val name: String,
-    )
+        val name: String?,
+        val parentId: String?,
+    ) {
+        init {
+            check(name != null || parentId != null) { "update request cannot be empty" }
+        }
+    }
 }
