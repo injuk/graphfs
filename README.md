@@ -42,4 +42,4 @@ graphfs
 - [x] folder 삭제 API가 resource 존재 여부를 함께 체크하도록 개선
 - [x] folder 이름 기반 조회 API 개발
 - [x] folder 조상 조회 API 개발
-- [ ] folder 이동 API 개발
+- [x] folder 이동 API 개발
